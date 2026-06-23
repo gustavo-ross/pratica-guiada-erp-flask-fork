@@ -29,3 +29,18 @@ def salvar_categoria(nome, categoria_id=None):
     except Exception as e:
         db.session.rollback()
         return False, f"Erro interno: {str(e)}"
+    
+
+def excluir_categoria(categoria_id):
+    categoria = obter_categoria(categoria_id)
+
+    if categoria.produtos:
+        return False, "Não é possível excluir uma categoria que possui produtos vinculados"
+    
+    try:
+        db.session.delete(categoria)
+        db.session.commit()
+        return True, "Categoria excluida com sucesso!"
+    except Exception as e:
+        db.session.rollback()
+        return False, f"Erro ao excluir categoria: {str(e)}"
